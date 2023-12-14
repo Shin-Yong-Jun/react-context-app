@@ -9,7 +9,6 @@ const Type = ({ orderType }) => {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
   const [orderData, updateItemCount] = useContext(OrderContext)
-  console.log('orderData, updateItemCount', orderData, updateItemCount)
 
   useEffect(() => {
     loadItems(orderType);
@@ -19,7 +18,6 @@ const Type = ({ orderType }) => {
     try {
       const response = await axios.get(`http://localhost:4000/${orderType}`);
       setItems(response.data);
-      console.log('response.data', response.data);
     } catch (error) {
       setError(true);
     }
@@ -32,6 +30,7 @@ const Type = ({ orderType }) => {
       key={item.name}
       name={item.name}
       imagePath={item.imagePath}
+      updateItemCount={(itemName, newItemCount) => updateItemCount(itemName, newItemCount, orderType)}
     />
   ));
   
@@ -45,7 +44,7 @@ const Type = ({ orderType }) => {
     <div>
       <h2>주문 종류</h2>
       <p>하나의 가격</p>
-      <p>총 가격: </p>
+      <p>총 가격: {orderData.totals[orderType]}</p>
       <div
         style={{
           display: "flex",
